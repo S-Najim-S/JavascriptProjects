@@ -78,6 +78,21 @@ var budgetCalculator = (function() {
         data.percentage = -1;
       }
     },
+    deleteItem: function(type, id){
+      var ids, index;
+      // map returns a new array
+      // ids return an array of all the elements
+      ids =   data.allItems[type].map(function(current){
+        return current.id;
+      });
+      // index will locate the index of the id we want
+      index = ids.indexOf(id);
+
+      if (index !== -1) {
+        // using splice method we remove the element from desiered index "1" tells the program that we want to remove exactly one element
+        data.allItems[type].splice(index, 1);
+      }
+    },
     getBudget: function() {
       return {
         budget: data.budget,
@@ -108,7 +123,8 @@ var UIController = (function() {
     budgetLabel: '.budget__value',
     budgetIncomeValue: '.budget__income--value',
     budgetExpenseValue: '.budget__expenses--value',
-    percentageLabel: '.budget__expenses--percentage'
+    percentageLabel: '.budget__expenses--percentage',
+    container: '.container'
 
 
   };
@@ -171,10 +187,10 @@ var UIController = (function() {
 
       if (type === 'inc') {
         element = DOMstrings.incomeContainer;
-        html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete__btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+        html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete__btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
       } else if (type === 'exp') {
         element = DOMstrings.expensesContainer;
-        html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete__btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+        html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete__btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
       }
       // replace the placeholder text with some actula data that we recieve from the object
       newHtml = html.replace('%id%', obj.id);
@@ -182,6 +198,11 @@ var UIController = (function() {
       newHtml = newHtml.replace('%value%', obj.val);
       // insert the html into the DOM
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+    },
+
+    deleteListItem: function(selectorID){
+      var element = document.getElementById(selectorID);
+      element.parentNode.removeChild(element);
     }
   };
   // Some code
@@ -199,6 +220,7 @@ var controller = (function(budgetCtrl, UICtrl) {
         addItem();
       }
     });
+    document.querySelector(DOMstrings.container).addEventListener('click', ctrlDeleteItem);
   };
   var updateBudget = function() {
          //1. Calculate the budget
@@ -222,13 +244,35 @@ var controller = (function(budgetCtrl, UICtrl) {
       UICtrl.addListItem(newItem, input.type);
       // clear fields
       UICtrl.clearFields();
-
       // calculate and update the budget
       updateBudget();
     } else {
       alert("Please enter valid input.")
     }
 
+  };
+
+  var ctrlDeleteItem = function(){
+    var itemId, splitId, id;
+
+    itemId = event.target.parentNode.parentNode.parentNode.parentNode.id;
+    console.log(itemId);
+    if (itemId) {
+      // the retrieved id will be inc-1 or exp-1 so we need to split it so we get an array with ["inc", "1"]
+      splitId = itemId.split('-');
+      // the 0th element is the type
+      type = splitId[0];
+      // the 1th element is the id
+      id = parseInt(splitId[1]);
+
+      // Delete item from datastructure
+      budgetCtrl.deleteItem(type, id);
+      // Delete item from UI
+      UICtrl.deleteListItem(itemId);
+
+      // Update and show new budget
+      updateBudget();
+    }
   };
   return {
     init: function() {

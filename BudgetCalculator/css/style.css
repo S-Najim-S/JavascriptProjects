@@ -32,6 +32,15 @@ body {
     background-position: center;
     position: relative;
 }
+.ion-ios-close-outline { color: red; }
+button{
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+
+}
+
 
 .budget {
     position: absolute;
