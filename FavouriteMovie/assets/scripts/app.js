@@ -7,13 +7,24 @@ const addMovieBtn = addMovieModalEl.querySelector('.btn--success');
 const userInputs = addMovieModalEl.querySelectorAll('input');
 const movieList = document.getElementById('movie-list');
 const enteryText = document.getElementById('entry-text');
+const deleteModal = document.getElementById('delete-modal');
+
+
+
+
 
 const movies = [];
 
-const toggleVisibleClass = () => {
-  addMovieModalEl.classList.toggle("visible");
+const showAddMovieModal = () => {
+  addMovieModalEl.classList.add("visible");
   backDropToggle();
 };
+
+const closeMovieModal = () => {
+  addMovieModalEl.classList.remove('visible');
+}
+
+
 
 const updateUI = () => {
 
@@ -32,12 +43,21 @@ const backDropToggle = () => {
 };
 
 const cancelAddMovie = () => {
-  toggleVisibleClass();
+  closeMovieModal();
+  backDropToggle();
   clearInputs();
 };
 
+const closeDeleteModal = () => {
+  deleteModal.classList.remove('visible');
+  backDropToggle();
+}
+
 const backDropClickHandler = () => {
-  toggleVisibleClass();
+  closeMovieModal();
+  closeDeleteModal();
+  backDropEl.classList.remove('visible');
+  clearInputs();
 };
 
 const clearInputs = () => {
@@ -58,6 +78,7 @@ const clearInputs = () => {
 
 
 const addMovieHandler = () => {
+
   const movieTitle = userInputs[0].value;
   const imageUrl = userInputs[1].value;
   const movieRating = userInputs[2].value;
@@ -77,8 +98,9 @@ const addMovieHandler = () => {
 
 
     movies.push(newMovie);
-    toggleVisibleClass();
+    closeMovieModal();
     clearInputs();
+    backDropToggle();
     renderNewMovie(newMovie.id, newMovie.title, newMovie.image, newMovie.rating);
     updateUI();
 
@@ -89,40 +111,50 @@ const addMovieHandler = () => {
 
 };
 
-// Deleting list element when double clicked
+const showDeleteModal = () => {
+  deleteModal.classList.add('visible');
+  backDropToggle();
+};
+
 const deleteMovie = (movieId) => {
   let movieIndex = 0;
 
   for (const movie of movies) {
 
-    if(movie.id === movieId){
+    if (movie.id === movieId) {
       break;
     }
     movieIndex++;
   }
   movies.splice(movieIndex, 1);
   movieList.children[movieIndex].remove();
+  closeDeleteModal();
+  backDropEl.classList.remove('visible');
+  backDropClickHandler();
   updateUI();
 
-};
+}
 
-const deleteConfirm = (movieId) => {
-  const acceptBtn = document.querySelector('.btn--danger');
+const deleteMovieHandler = (movieId) => {
+
+  showDeleteModal();
+
+  let acceptBtn = document.querySelector('.btn--danger');
   const declineBtn = document.getElementById('cancel');
-  const deleteModal = document.getElementById('delete-modal');
-
-
   
 
-  acceptBtn.addEventListener('click', () =>{
-    deleteMovie(movieId);
-    deleteModal.style.display = 'none';
-  });  
+  acceptBtn.replaceWith(acceptBtn.cloneNode(true));
+  acceptBtn = document.querySelector('.btn--danger');
+  
+  declineBtn.removeEventListener('click', closeDeleteModal);
+  
+   
+  acceptBtn.addEventListener('click', deleteMovie.bind(null, movieId));
+  declineBtn.addEventListener('click', closeDeleteModal);
 
-  declineBtn.addEventListener('click', ()=>{
-    deleteModal.style.display = 'none';
-  })
 }
+
+
 
 
 const renderNewMovie = (id, title, imageUrl, rating) => {
@@ -130,7 +162,7 @@ const renderNewMovie = (id, title, imageUrl, rating) => {
   const newMovieElement = document.createElement('li');
   newMovieElement.className = 'movie-element';
   newMovieElement.innerHTML =
-   `
+    `
     <div class="movie-element__image">
       <img src="${imageUrl}" alt="${title}" >
     </div>
@@ -140,13 +172,13 @@ const renderNewMovie = (id, title, imageUrl, rating) => {
     </div>
   `;
 
-  newMovieElement.addEventListener('dblclick', deleteConfirm.bind(null, id));
+  newMovieElement.addEventListener('dblclick', deleteMovieHandler.bind(null, id));
   movieList.append(newMovieElement);
 }
 
 
 
-startAddMovieButton.addEventListener("click", toggleVisibleClass);
+startAddMovieButton.addEventListener("click", showAddMovieModal);
 cancelBtn.addEventListener('click', cancelAddMovie);
 backDropEl.addEventListener('click', backDropClickHandler);
 addMovieBtn.addEventListener('click', addMovieHandler);
