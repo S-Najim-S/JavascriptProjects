@@ -69,6 +69,7 @@ const addMovieHandler = () => {
     movieRating < 6) {
 
     const newMovie = {
+      id: '_' + Math.random().toString(36).substr(2, 9),
       title: movieTitle,
       image: imageUrl,
       rating: movieRating
@@ -78,7 +79,7 @@ const addMovieHandler = () => {
     movies.push(newMovie);
     toggleVisibleClass();
     clearInputs();
-    renderNewMovie(newMovie.title, newMovie.image, newMovie.rating);
+    renderNewMovie(newMovie.id, newMovie.title, newMovie.image, newMovie.rating);
     updateUI();
 
 
@@ -88,7 +89,43 @@ const addMovieHandler = () => {
 
 };
 
-const renderNewMovie = (title, imageUrl, rating) => {
+// Deleting list element when double clicked
+const deleteMovie = (movieId) => {
+  let movieIndex = 0;
+
+  for (const movie of movies) {
+
+    if(movie.id === movieId){
+      break;
+    }
+    movieIndex++;
+  }
+  movies.splice(movieIndex, 1);
+  movieList.children[movieIndex].remove();
+  updateUI();
+
+};
+
+const deleteConfirm = (movieId) => {
+  const acceptBtn = document.querySelector('.btn--danger');
+  const declineBtn = document.getElementById('cancel');
+  const deleteModal = document.getElementById('delete-modal');
+
+
+  
+
+  acceptBtn.addEventListener('click', () =>{
+    deleteMovie(movieId);
+    deleteModal.style.display = 'none';
+  });  
+
+  declineBtn.addEventListener('click', ()=>{
+    deleteModal.style.display = 'none';
+  })
+}
+
+
+const renderNewMovie = (id, title, imageUrl, rating) => {
 
   const newMovieElement = document.createElement('li');
   newMovieElement.className = 'movie-element';
@@ -101,7 +138,9 @@ const renderNewMovie = (title, imageUrl, rating) => {
       <h2>${title}</h2>
       <p>${rating}/5</p>
     </div>
-  `
+  `;
+
+  newMovieElement.addEventListener('dblclick', deleteConfirm.bind(null, id));
   movieList.append(newMovieElement);
 }
 
