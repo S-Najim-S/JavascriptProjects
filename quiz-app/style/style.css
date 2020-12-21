@@ -1,0 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap");
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #f1dfd1;
+	background-image: linear-gradient(315deg, #f1dfd1 0%, #f6f0ea 100%);
+	font-family: "Poppins", sans-serif;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	min-height: 100vh;
+	display: flex;
+}
+
+.quiz-container {
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
+	width: 600px;
+	max-width: 100%;
+	overflow: hidden;
+}
+.quiz-header {
+	padding: 2rem;
+}
+ul {
+	list-style-type: none;
+	padding: 0;
+}
+ul li {
+	font-size: 1.2rem;
+	margin: 1rem 0;
+}
+h2 {
+	margin: 0;
+}
+button {
+	background-color: royalblue;
+	border: none;
+	color: white;
+	display: block;
+	font-family: inherit;
+	font-size: 1rem;
+	width: 100%;
+	padding: 1rem;
+	cursor: pointer;
+}
