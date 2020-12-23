@@ -1,0 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap");
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #bdd4e7;
+	font-family: "Poppins", sans-serif;
+	/* align-items: center; */
+	/* justify-content: center; */
+	margin: 0;
+	flex-wrap: wrap;
+	/* min-height: 100vh; */
+	display: flex;
+}
+.notes {
+	background-color: white;
+	height: 300px;
+	width: 300px;
+	margin: 20px;
+}
+.notes .toolbar {
+	background-color: rgb(67, 159, 196);
+	/* display: flex; */
+	justify-content: flex-end;
+	padding: 0.5rem;
+}
+
+.notes .toolbar button {
+	background-color: transparent;
+	border: none;
+	color: white;
+	font-size: 1rem;
+	margin-left: 0.5rem;
+}
+.notes .main-text {
+	display: none;
+	height: 100%;
+	width: 100%;
+}
+.notes textarea {
+	font-family: inherit;
+	border: none;
+	height: 100%;
+	width: 100%;
+	outline: none;
+}
