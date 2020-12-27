@@ -3,7 +3,7 @@ const notesEl = document.querySelector(".notes");
 
 const notes = JSON.parse(localStorage.getItem("notes"));
 
-const addNewNote = (text) => {
+const addNewNote = (text = "") => {
 	const note = document.createElement("div");
 	note.classList.add("note");
 
@@ -13,16 +13,17 @@ const addNewNote = (text) => {
             <button class="edit"><i class="fa fa-pencil"></i></button>
             <button class="delete"><i class="fa fa-trash" ></i></button>
         </div>
-        <div class="main_text hidden"></div>
-        <textarea></textarea>
+        <div class="main_text ${text ? "" : "hidden"} "></div>
+        <textarea class="${text ? "hidden" : ""}"></textarea>
     </div> `;
 
-	const textArea = note.querySelector("textarea");
-	const main_text = note.querySelector(".main_text");
 	const deleteBtn = note.querySelector(".delete");
 	const editBtn = note.querySelector(".edit");
+	const textArea = note.querySelector("textarea");
+	const main_text = note.querySelector(".main_text");
 
 	textArea.value = text;
+	main_text.innerHTML = text;
 
 	// toggling the hidden class for main-text and textarea
 	editBtn.addEventListener("click", () => {
@@ -33,6 +34,7 @@ const addNewNote = (text) => {
 	// remove note
 	deleteBtn.addEventListener("click", () => {
 		note.remove();
+		updateLocalStorage();
 	});
 	// Typing inside textarea
 	textArea.addEventListener("input", (e) => {
@@ -50,7 +52,7 @@ const updateLocalStorage = () => {
 
 	const notes = [];
 
-	notes.forEach((note) => {
+	notesText.forEach((note) => {
 		notes.push(note.value);
 	});
 	localStorage.setItem("notes", JSON.stringify(notes));
