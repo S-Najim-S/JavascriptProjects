@@ -5,7 +5,7 @@
 }
 
 body {
-	background-color: #bdd4e7;
+	background-color: #637788;
 	font-family: "Poppins", sans-serif;
 	/* align-items: center; */
 	/* justify-content: center; */
@@ -29,6 +29,7 @@ body {
 	height: 300px;
 	width: 300px;
 	margin: 20px;
+	box-shadow: 0 0 10px 4px rgb(0, 0, 0, 0.1);
 }
 .note .toolbar {
 	background-color: rgb(67, 159, 196);
@@ -46,7 +47,7 @@ body {
 	margin-left: 0.5rem;
 }
 .note .main-text {
-	background-color: white;
+	background-color: rgb(121, 70, 70);
 	height: 400px;
 	width: 100%;
 	overflow: hidden;
