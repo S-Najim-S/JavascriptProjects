@@ -5,6 +5,7 @@ const movies = [];
 
 const renderMovies = (filterTerm = "") => {
 	const movieList = document.getElementById("movie-list");
+
 	if (movies.length === 0) {
 		movieList.classList.remove("visible");
 		return;
@@ -13,16 +14,18 @@ const renderMovies = (filterTerm = "") => {
 	}
 	movieList.innerHTML = "";
 
+	const { info } = movie;
+
 	const filteredMovies = !filterTerm
 		? movies
-		: movies.filter((movie) => movie.info.title.includes(filterTerm));
+		: movies.filter((movie) => info.title.includes(filterTerm));
 	filteredMovies.forEach((movie) => {
 		const movieElement = document.createElement("li");
-		let text = movie.info.title + "-";
+		let text = info.title + "-";
 
 		for (const key in movie.info) {
 			if (key !== "title") {
-				text = text + `${key} : ${movie.info[key]}`;
+				text = text + `${key} : ${info[key]}`;
 			}
 		}
 		movieElement.textContent = text;
@@ -30,9 +33,9 @@ const renderMovies = (filterTerm = "") => {
 	});
 };
 const addMovieHandler = () => {
-	const title = document.getElementById("title");
-	const extraName = document.getElementById("extra-name");
-	const extraValue = document.getElementById("extra-value");
+	const title = document.getElementById("title").value;
+	const extraName = document.getElementById("extra-name").value;
+	const extraValue = document.getElementById("extra-value").value;
 
 	if (
 		title.value.trim() === "" ||
