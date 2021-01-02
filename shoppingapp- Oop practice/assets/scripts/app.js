@@ -1,133 +1,149 @@
-class ShoppingCart {
-	items = [];
-
-	set cartItem(value) {
-		this.items = value;
-		this.totalOutput.innerHTML = `<h2>Total: $${this.totalAmount.toFix(
-			2
-		)}</h2>`;
-	}
-	get totalAmount() {
-		const sum = this.items.reduce((prevV, curItem) => prevV + curItem.price, 0);
-		return sum;
-	}
-
-	addProduct(product) {
-		const updateItems = [...this.items];
-		updateItems.push(product);
-		this.cartItem = updateItems;
-	}
-
-	render() {
-		const cartElement = document.createElement("section");
-
-		cartElement.innerHTML = `
-      <h2>Total: $${0}</h2>
-      <button>Order Now!!!</button>
-    `;
-
-		cartElement.className = "cart";
-		this.totalOutput = cartElement.querySelector("h2");
-		return cartElement;
-	}
-}
-
-class Shop {
-	render() {
-		const renderHook = document.getElementById("app");
-		this.cart = new ShoppingCart();
-		const cartEl = this.cart.render();
-		const productList = new ProductList();
-		const prodListEl = productList.render();
-
-		renderHook.append(cartEl);
-		renderHook.append(prodListEl);
-	}
-}
-
 class Product {
-	// title = 'DEFAULT';
-	// imageUrl;
-	// description;
-	// price;
-
-	constructor(title, image, desc, price) {
+	constructor(title, imageUrl, description, price) {
 		this.title = title;
-		this.imageUrl = image;
-		this.description = desc;
+		this.imageUrl = imageUrl;
+		this.description = description;
 		this.price = price;
 	}
 }
-
-class ProductItem {
-	constructor(product) {
-		this.product = product;
-	}
-
-	addtoCart() {
-		App.addItemToCart(this.product);
-	}
-
-	render() {
-		const prodEl = document.createElement("li");
-		prodEl.className = "product-item";
-		prodEl.innerHTML = `
-        <div>
-          <img src="${this.product.imageUrl}" alt="${this.product.title}" >
-          <div class="product-item__content">
-            <h2>${this.product.title}</h2>
-            <h3>\$${this.product.price}</h3>
-            <p>${this.product.description}</p>
-            <button>Add to Cart</button>
-          </div>
-        </div>
-      `;
-
-		const addBtn = prodEl.querySelector("button");
-
-		addBtn.addEventListener("click", this.addtoCart.bind(this));
-		return prodEl;
+class ElementAttribute {
+	constructor(attrName, attrValue) {
+		this.name = attrName;
+		this.value = attrValue;
 	}
 }
 
-class ProductList {
+class Component {
+	constructor(renderHookId) {
+		this.hookId = renderHookId;
+		this.render();
+	}
+	render() {}
+	createRootElement(tag, cssClasses, attributes) {
+		const rootElement = document.createElement(tag);
+		if (cssClasses) {
+			rootElement.className = cssClasses;
+		}
+		if (attributes && attributes.length > 0) {
+			for (const attr of attributes) {
+				rootElement.setAttribute(attr.name, attr.value);
+			}
+		}
+		document.getElementById(this.hookId).append(rootElement);
+		return rootElement;
+	}
+}
+
+class ShoppingCart extends Component {
+	items = [];
+
+	set cartItems(value) {
+		this.items = value;
+		this.totalOutput.innerHTML = `<h2>Total: $${this.totalAmount.toFixed(
+			2
+		)}</h2>`;
+	}
+
+	get totalAmount() {
+		const sum = this.items.reduce((oldVal, curItem) => {
+			return oldVal + curItem.price;
+		}, 0);
+		return sum;
+	}
+
+	constructor(renderHookId) {
+		super(renderHookId);
+	}
+
+	addProduct(product) {
+		const updatedItems = [...this.items];
+		updatedItems.push(product);
+		this.cartItems = updatedItems;
+	}
+
+	render() {
+		const cartEl = this.createRootElement("section", "cart");
+		cartEl.innerHTML = `
+			<h2>Total: $${0}</h2>
+			<button>Order Now</button>
+		`;
+		this.totalOutput = cartEl.querySelector("h2");
+		return cartEl;
+	}
+}
+
+class ProductItem extends Component {
+	constructor(product, renderHookId) {
+		super(renderHookId);
+		this.product = product;
+	}
+
+	addingToCart() {
+		console.log("Adding...", this.product);
+		App.addProductToCart(this.product);
+	}
+	render() {
+		const prodEl = this.createRootElement("li", "product-item");
+		prodEl.innerHTML = `
+		<div>
+			<img src="${this.product.imageUrl}">
+			<div class="product-item__content">
+				<h2>${this.product.title}</h2>
+				<h3>$${this.product.price}</h3>
+				<p>${this.product.description}</p>
+				<button>Add to cart</button>
+			</div>
+		</div>
+		`;
+		const addToCart = prodEl.querySelector("button");
+		addToCart.addEventListener("click", this.addingToCart.bind(this));
+	}
+}
+class ProductList extends Component {
 	products = [
 		new Product(
-			"A Pillow",
-			"https://www.maxpixel.net/static/photo/2x/Soft-Pillow-Green-Decoration-Deco-Snuggle-1241878.jpg",
-			"A soft pillow!",
-			19.99
+			"A Smart phone",
+			"https://images-na.ssl-images-amazon.com/images/I/61WgNw2RO5L._AC_SX679_.jpg",
+			"Smart with a pen",
+			1024.9
 		),
 		new Product(
-			"A Carpet",
-			"https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Ardabil_Carpet.jpg/397px-Ardabil_Carpet.jpg",
-			"A carpet which you might like - or not.",
-			89.99
+			"A Tv",
+			"https://www.homeandsmart.de/var/site/storage/images/_aliases/fixed_col_8/8/8/9/1/401988-1-ger-DE/philips-android-tv.jpg",
+			"Smart remote",
+			899.9
 		),
 	];
 
-	constructor() {}
+	constructor(renderHooId) {
+		super(renderHooId);
+	}
 
 	render() {
-		const prodList = document.createElement("ul");
-		prodList.className = "product-list";
+		this.createRootElement("ul", "product-list", [
+			new ElementAttribute("id", "prod-list"),
+		]);
 		for (const prod of this.products) {
-			const productItem = new ProductItem(prod);
-			const prodEl = productItem.render();
-			prodList.append(prodEl);
+			new ProductItem(prod, "prod-list");
 		}
-		return prodList;
+	}
+}
+class Shop extends Component {
+	constructor() {
+		super();
+	}
+	render() {
+		this.cart = new ShoppingCart("app");
+		new ProductList("app");
 	}
 }
 
 class App {
 	static init() {
 		const shop = new Shop();
-		shop.render();
 		this.cart = shop.cart;
 	}
-
-	static addItemToCart(product) {
+	static addProductToCart(product) {
 		this.cart.addProduct(product);
 	}
 }
