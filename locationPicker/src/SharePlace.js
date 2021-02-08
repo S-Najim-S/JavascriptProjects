@@ -1,17 +1,18 @@
 import { Modal } from "./UI/Modal";
-// import { Map } from "./UI/Map";
+import { Map } from "./UI/Map";
 
 class PlaceFinder {
   constructor() {
     const addressForm = document.querySelector("form");
     const locateBtn = document.getElementById("locate-btn");
 
-    locateBtn.addEventListener("click", this.locateUserHandler);
+    locateBtn.addEventListener("click", this.locateUserHandler.bind(this));
 
-    addressForm.addEventListener("submit", this.findAddressHandler);
+    addressForm.addEventListener("submit", this.findAddressHandler.bind(this));
   }
 
-  selectCoor(coordinates) {
+  selectPlace(coordinates) {
+    console.log(coordinates);
     if (this.map) {
       this.map.render(coordinates);
     } else {
@@ -37,8 +38,7 @@ class PlaceFinder {
           lat: successResult.coords.latitude,
           lng: successResult.coords.longitude,
         };
-
-        console.log(cordinates);
+        this.selectPlace(cordinates);
       },
       (error) => {
         modal.hide();
