@@ -1,10 +1,10 @@
 const mealsEl = document.getElementById("meals");
 const favContainer = document.getElementById("fav-meals");
-const recipeInfo = document.getElementById("recipe-info");
 const searchTerm = document.getElementById("search-term");
 const searchBtn = document.getElementById("search");
-const maelPopup = document.getElementById("meal-popup");
+const maelPopup = document.getElementById("popup-container");
 const closePopupBtn = document.getElementById("close-popup");
+const mealInfoEl = document.getElementById("meal-info");
 
 getRandomMeal();
 fetchFavMeals();
@@ -58,6 +58,7 @@ function addMeal(mealData, random = true) {
     </div>`;
 
   const myBtn = meal.querySelector(".meal-body .fav-btn");
+
   myBtn.addEventListener("click", () => {
     if (myBtn.classList.contains("active")) {
       removeMealLs(mealData.idMeal);
@@ -68,6 +69,11 @@ function addMeal(mealData, random = true) {
     }
 
     fetchFavMeals();
+  });
+
+  meal.addEventListener("click", () => {
+    console.log("Hello");
+    showMealInfo(mealData);
   });
   meals.appendChild(meal);
 }
@@ -122,13 +128,35 @@ function addMealToFav(mealData) {
     fetchFavMeals();
   });
 
+  favMeal.addEventListener("click", () => {
+    showMealInfo(mealData);
+  });
+
   favContainer.appendChild(favMeal);
 }
 
 function showMealInfo(mealData) {
-  //update the popup
+  // clean
+  mealInfoEl.innerHTML = "";
 
+  //update the popup
   const mealEl = document.createElement("div");
+
+  const ingredients = [];
+
+  // getIngererdients
+  for (let i = 1; i <= 20; i++) {
+    if (mealData[`strIngredient${i}`]) {
+      ingredients.push(
+        `${mealData[`strIngredient` + i]} - ${mealData[`strMeasure` + i]}`
+      );
+      console.log(mealData[`strIngredient${i}`]);
+
+      console.log(mealData[`strMeasure${i}`]);
+    } else {
+      break;
+    }
+  }
 
   mealEl.innerHTML = `
       <h1>${mealData.strMeal}</h1>
@@ -140,17 +168,16 @@ function showMealInfo(mealData) {
         <p>
         ${mealData.strInstructions}
         </p>
+        <h3>Ingredients:</h3>
         <ul>
-          <li>Ing 1 / Measure</li>
-          <li>Ing 1 / Measure</li>
-          <li>Ing 1 / Measure</li>
-        </ul>`;
+          ${ingredients.map((ingred) => `<li>${ingred}</li>`).join("")}
+        </ul>
+        `;
 
-  recipeInfo.appendChild(mealEl);
+  mealInfoEl.appendChild(mealEl);
 
-  // show the recipe
-
-  recipeInfo.classList.remove("hidden");
+  // show the recipe info
+  maelPopup.classList.remove("hidden");
 }
 
 searchBtn.addEventListener("click", async () => {
@@ -167,6 +194,9 @@ searchBtn.addEventListener("click", async () => {
 });
 
 closePopupBtn.addEventListener("click", () => {
-  console.log("Hello");
+  maelPopup.classList.add("hidden");
+});
+
+maelPopup.addEventListener("click", () => {
   maelPopup.classList.add("hidden");
 });
