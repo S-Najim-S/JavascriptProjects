@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+    />
+    <script src="script.js" defer></script>
+  </head>
+
+  <body>
+    <div class="sidenav">
+      <div class="sidenav-elements">
+        <button title="Top-rated" id="top-rated">
+          <i class="fas fa-medal"></i>
+        </button>
+        <button id="upcoming" title="Upcoming">
+          <i class="fas fa-stopwatch"></i>
+        </button>
+        <button id="popular" title="Popular movies">
+          <i class="fas fa-fire-alt"></i>
+        </button>
+        <button id="airing-today" title="Airing today">
+          <i class="fas fa-calendar-check"></i>
+        </button>
+      </div>
+    </div>
+
+    <header>
+      <form id="form">
+        <input placeholder="Search" type="text" id="search" class="search" />
+      </form>
+    </header>
+
+    <main>
+      <div class="movies-container"></div>
+    </main>
+  </body>
+</html>
