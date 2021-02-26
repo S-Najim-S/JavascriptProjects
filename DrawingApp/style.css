@@ -19,6 +19,7 @@ canvas {
 }
 .zoom {
   background-color: #8c5e5e;
+  display: flex;
   padding: 1rem;
   width: 500px;
 }
@@ -30,6 +31,12 @@ canvas {
   justify-content: center;
   font-size: 1rem;
   padding: 0.25rem;
+  margin: 0.25;
   height: 40px;
+  text-align: center;
   width: 40px;
+  margin: 2px;
+}
+.zoom > *:last-child {
+  margin-left: auto;
 }

@@ -7,6 +7,8 @@ console.log(sizeEl);
 let colorEl = document.getElementById("color");
 let size = 30;
 
+const clearBtn = document.getElementById("clear");
+
 let color = "black";
 let mouseDown = false;
 x = 50;
@@ -73,4 +75,8 @@ decrease.addEventListener("click", () => {
     size = 3;
   }
   updateSize();
+});
+
+clearBtn.addEventListener("click", () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
